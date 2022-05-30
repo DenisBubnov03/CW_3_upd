@@ -4,18 +4,27 @@ import logging
 
 
 def get_data_json():
+    """
+    Получение данных пользователей
+    """
     with open('user_data.json', "r", encoding="UTF-8") as file:
         data = json.load(file)
         return data
 
 
 def get_json():
+    """
+    Получение списка постов
+    """
     with open('posts.json', "r", encoding="UTF-8") as file:
         all_post = json.load(file)
         return all_post
 
 
 def search_post(text):
+    """
+    Поиск постов
+    """
     post = get_json()
     content = []
     for s in post:
@@ -25,6 +34,9 @@ def search_post(text):
 
 
 def write_to_json(filename, content):
+    """
+    Добавление поста
+    """
     data = get_json()
     user_info = {'pic': f'/uploads/images/{filename}', "content": content}
     data.append(user_info)
@@ -36,6 +48,9 @@ def write_to_json(filename, content):
 
 
 def write_to_data(login, password):
+    """
+    Запись данных пользователя
+    """
     data = get_data_json()
     user_info = {'login': login, "pass": password}
     data.append(user_info)

@@ -15,6 +15,9 @@ def loader_reg():
 
 @loader_blueprint.route("/reg/", methods=["POST"])
 def register():
+    """
+    Регистрация и отработка ошибок
+    """
     error = ""
     login = request.form.get('name_user')
     password = request.form.get('pass')
@@ -30,17 +33,26 @@ def register():
 
 @loader_blueprint.route("/logout/")
 def logout():
+    """
+    Выход с аккаунта
+    """
     session.clear()
     return redirect('/')
 
 
 @loader_blueprint.route('/auth/')
 def loader_log():
+    """
+    Переход на страницу с авторизацией
+    """
     return render_template('auth.html')
 
 
 @loader_blueprint.route('/auth/', methods=["POST"])
 def loging():
+    """
+    Отработка входа и обработка ошибок
+    """
     error = ""
     login = request.form["name_user"]
     password = request.form["pass"]
