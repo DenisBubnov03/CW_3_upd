@@ -6,6 +6,7 @@ import json
 main_page = Blueprint('main_page', __name__)
 add_pic = Blueprint('add_pic', __name__)
 
+
 @main_page.route("/")
 def page_index():
     """

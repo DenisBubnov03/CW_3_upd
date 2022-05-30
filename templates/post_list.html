@@ -4,7 +4,13 @@
     <main>
 
     <a href="/" class="link">Назад</a>
-
+     <hr>
+        {% if name_user  %}
+    <a href="/post/" class="button">Добавить пост</a>
+    {% else %}
+        <p><a href="/auth/">Авторизуйтесь</a> для добавления поста</p>
+    {% endif %}
+    <hr>
     <h1>Посты по запросу {{ search_word }}</h1>
     {% for post in posts %}
         <div class="post">
@@ -13,6 +19,6 @@
         </div>
         <hr>
     {% endfor %}
-    <a href="/post/" class="button">Добавить пост</a>
+
     </main>
 {% endblock %}

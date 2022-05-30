@@ -18,12 +18,12 @@ def register():
     """
     Регистрация и отработка ошибок
     """
-    error = ""
+
     login = request.form.get('name_user')
     password = request.form.get('pass')
     for log in get_data_json():
-        if login in log['login']:
-            error += "true"
+        if login == log['login']:
+            error = True
             new_logger.info("Введен повторяющийся логин")
             return render_template('Error_log.html', error_log=error)
     write_to_data(login, password)
@@ -53,7 +53,6 @@ def loging():
     """
     Отработка входа и обработка ошибок
     """
-    error = ""
     login = request.form["name_user"]
     password = request.form["pass"]
     for x in get_data_json():
@@ -62,10 +61,10 @@ def loging():
                 session["key"] = login
                 new_logger.info(f"Пользователь {login} вошел в систему")
                 return redirect('/')
-        else:
-            error += "true"
-            new_logger.error(f"Пользователь {login} ввел неверный логин или пароль")
-            return render_template('Error_log.html', error_pass=error)
+    else:
+        error = True
+        new_logger.error(f"Пользователь {login} ввел неверный логин или пароль")
+        return render_template('Error_log.html', error_pass=error)
 
 
 @loader_blueprint.route('/post/')
@@ -73,7 +72,7 @@ def loader_page():
     """
     Переход на страницу /post/
     """
-    return render_template('post_form.html')
+    return render_template('post_form.html', name_user=session["key"])
 
 
 @loader_blueprint.route("/post/", methods=["POST"])
@@ -93,7 +92,7 @@ def page_post_upload():
         picture.save(f"./uploads/images/{filename}")
         content = request.form['content']
         write_to_json(filename, content)
-        return render_template("post_uploaded.html", content=content, picture=filename)
+        return render_template("post_uploaded.html", content=content, name_user=session["key"], picture=filename)
     else:
         error += "load"
         new_logger.info("Картинка не была выбрана")
@@ -108,4 +107,7 @@ def search_page():
     s = request.args.get('s')
     new_logger.info(f"Поиск по тегу: {s}")
     find_post = search_post(s)
-    return render_template('post_list.html', search_word=s, posts=find_post)
+    if session.get("key"):
+        return render_template('post_list.html', name_user=session["key"], search_word=s, posts=find_post)
+    else:
+        return render_template('post_list.html', search_word=s, posts=find_post)
