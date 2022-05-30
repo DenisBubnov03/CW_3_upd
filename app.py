@@ -1,11 +1,11 @@
-
 from blueprint.main import *
 from blueprint.loader import *
+
 
 POST_PATH = "posts.json"
 UPLOAD_FOLDER = "uploads/images"
 app = Flask(__name__)
-
+app.secret_key = 'super secret key'
 app.register_blueprint(main_page)
 app.register_blueprint(loader_blueprint)
 
@@ -27,4 +27,6 @@ def static_dir(path):
 
 
 if __name__ == "__main__":
+
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.run()

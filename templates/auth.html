@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Войти</title>
+     <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<main>
+    <h1>Войти</h1>
+    <form action="/auth/" method="POST" enctype="multipart/form-data">
+        <p>Логин</p>
+        <input type="text" placeholder="Введите логин" name="name_user">
+        <p>Пароль</p>
+        <input type="password" placeholder="Введите пароль"  name="pass">
+        <br><br>
+        <input type="submit" value="Войти" class="button">
+        <hr><br>
+        <a href="/reg/" class="button">Нет аккаунта?</a>
+    </form>
+</main>
+</body>
+</html>

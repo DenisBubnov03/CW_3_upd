@@ -4,10 +4,21 @@
     <meta charset="UTF-8">
     <title>Главная страница</title>
     <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
+    </head>
+    <body>
+    <main>
+    {% if not name_user  %}
+        <a href="/auth/" class="button">Войти</a>
 
-<main>
+    {% else %}
+        {{ name_user }}
+        <a href="/logout/" class="button">Выйти</a>
+
+    {% endif %}
+    {% block content %}
+
+
+
 
     <h1>Поиск постов</h1>
 
@@ -18,9 +29,19 @@
     </form>
 
     <hr>
-
+    {% for post in posts %}
+        <div class="post">
+            <img src={{ post.pic }} width="100%" alt="">
+            <p>{{ post.content }} </p>
+        </div>
+        <hr>
+    {% endfor %}
+    {% if name_user  %}
     <a href="/post/" class="button">Добавить пост</a>
-
+    {% else %}
+        <p><a href="/auth/">Авторизуйтесь</a> для добавления поста</p>
+    {% endif %}
+{% endblock %}
 </main>
 </body>
 </html>

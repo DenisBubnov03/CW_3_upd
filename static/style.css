@@ -22,7 +22,7 @@ select {
     font-size: 18px;
 }
 
-input[type=text] {
+input[type=text],input[type=password] {
     padding: 8px;
     position: relative;
     top: -2px;

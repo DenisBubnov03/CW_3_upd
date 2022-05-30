@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, send_from_directory, Blueprint
+from flask import Flask, request, render_template, send_from_directory, Blueprint, session
 from functions import *
-app = Flask(__name__)
+import json
+
 
 main_page = Blueprint('main_page', __name__)
 add_pic = Blueprint('add_pic', __name__)
@@ -10,6 +11,9 @@ def page_index():
     """
     Загрузка главной страницы
     """
-    return render_template("index.html")
-
+    post = get_json()
+    if session.get('key'):
+        return render_template("index.html", name_user=session["key"], posts=post)
+    else:
+        return render_template("index.html", posts=post)
 

@@ -1,12 +1,59 @@
-from flask import Blueprint, Flask, render_template, request
+from flask import Blueprint, Flask, render_template, request, redirect, session
 from functions import *
 
-
-app = Flask(__name__)
 ALLOWED_EXTENSIONS = {'jpeg', 'png', 'jpg', 'gif'}
 loader_blueprint = Blueprint('loader_blueprint', __name__)
 
 
+@loader_blueprint.route('/reg/')
+def loader_reg():
+    """
+    Переход на страницу /reg/
+    """
+    return render_template('reg.html')
+
+
+@loader_blueprint.route("/reg/", methods=["POST"])
+def register():
+    error = ""
+    login = request.form.get('name_user')
+    password = request.form.get('pass')
+    for log in get_data_json():
+        if login in log['login']:
+            error += "true"
+            new_logger.info("Введен повторяющийся логин")
+            return render_template('Error_log.html', error_log=error)
+    write_to_data(login, password)
+    session["key"] = login
+    return redirect('/')
+
+
+@loader_blueprint.route("/logout/")
+def logout():
+    session.clear()
+    return redirect('/')
+
+
+@loader_blueprint.route('/auth/')
+def loader_log():
+    return render_template('auth.html')
+
+
+@loader_blueprint.route('/auth/', methods=["POST"])
+def loging():
+    error = ""
+    login = request.form["name_user"]
+    password = request.form["pass"]
+    for x in get_data_json():
+        if x['login'] == login:
+            if x['pass'] == password:
+                session["key"] = login
+                new_logger.info(f"Пользователь {login} вошел в систему")
+                return redirect('/')
+        else:
+            error += "true"
+            new_logger.error(f"Пользователь {login} ввел неверный логин или пароль")
+            return render_template('Error_log.html', error_pass=error)
 
 
 @loader_blueprint.route('/post/')
@@ -22,20 +69,23 @@ def page_post_upload():
     """
     Отработка страницы добавления поста и обработка ошибок
     """
+    error = ''
     picture = request.files.get("picture")
     filename = picture.filename
     extension = filename.split(".")[-1]
     if extension not in ALLOWED_EXTENSIONS:
+        error += "format"
         new_logger.info("Неверный формат изображения")
-        return ("Неверный формат изображения")
+        return render_template("Error_log.html", error_format=error, format=", ".join(ALLOWED_EXTENSIONS))
     if picture:
         picture.save(f"./uploads/images/{filename}")
         content = request.form['content']
         write_to_json(filename, content)
         return render_template("post_uploaded.html", content=content, picture=filename)
     else:
+        error += "load"
         new_logger.info("Картинка не была выбрана")
-        return ("Ошибка загрузки")
+        return render_template("Error_log.html", error_load=error)
 
 
 @loader_blueprint.route('/search/')

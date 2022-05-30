@@ -3,6 +3,12 @@ from flask import render_template, abort
 import logging
 
 
+def get_data_json():
+    with open('user_data.json', "r", encoding="UTF-8") as file:
+        data = json.load(file)
+        return data
+
+
 def get_json():
     with open('posts.json', "r", encoding="UTF-8") as file:
         all_post = json.load(file)
@@ -26,9 +32,21 @@ def write_to_json(filename, content):
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
+
+
+
+def write_to_data(login, password):
+    data = get_data_json()
+    user_info = {'login': login, "pass": password}
+    data.append(user_info)
+    with open('user_data.json', "w", encoding="UTF-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
+
 new_logger = logging.getLogger('loger')
 new_logger.setLevel(logging.INFO)
 file_handler = logging.FileHandler("basic.log", encoding='utf-8')
 formatter = logging.Formatter("%(levelname)s : %(asctime)s : %(message)s")
 file_handler.setFormatter(formatter)
 new_logger.addHandler(file_handler)
+
