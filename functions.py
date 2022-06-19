@@ -4,6 +4,7 @@ import logging
 
 
 
+
 def get_all_post():
     """
     Получение списка постов
@@ -38,7 +39,6 @@ def get_posts_by_user(user_name):
     return content
 
 
-
 def get_comments_by_post_id(post_id):
     """Возращение комментария определенного поста"""
     comments = get_all_comments()
@@ -68,8 +68,6 @@ def search_for_posts(query):
     for s in post:
         if query.lower() in s["content"]:
             content.append(s)
-        else:
-            raise ValueError("Такого поста нет")
     return content
 
 
@@ -81,8 +79,8 @@ def get_post_by_pk(pk):
     for s in post:
         if s['pk'] == pk:
             return s
-        else:
-            raise ValueError("Такого поста нет")
+    else:
+        raise ValueError("Такого поста нет")
 
 
 new_logger = logging.getLogger('loger')
@@ -92,6 +90,8 @@ formatter = logging.Formatter("%(asctime)s : %(levelname)s : %(message)s")
 file_handler.setFormatter(formatter)
 new_logger.addHandler(file_handler)
 
+
+"""Будущее обновление"""
 # def write_to_json(filename, content):
 #     """
 #     Добавление поста

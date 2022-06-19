@@ -1,16 +1,20 @@
 from functions import *
 loader_blueprint = Blueprint('loader_blueprint', __name__)
 main_page = Blueprint('main_page', __name__)
+app = Flask(__name__)
 
 
-@loader_blueprint.route("/api/post")
+@loader_blueprint.route("/api/post/")
 def all_post():
-    new_logger.info("Запроси /api/post")
-    return jsonify(get_all_post())
+    """Вывод api страницы"""
+    post = get_all_post()
+    new_logger.info("Запрос /api/post/")
+    return jsonify(post)
 
 
 @loader_blueprint.route("/api/post/<int:post_id>", methods=["GET"])
 def get_post(post_id):
+    """Вывод api страницы определенного поста"""
     post = get_post_by_pk(post_id)
     new_logger.info(f'Запрос /api/post/{post_id}')
     return jsonify(post)
@@ -19,7 +23,7 @@ def get_post(post_id):
 @main_page.route("/")
 def page_index():
     """
-    Загрузка главной страницы
+    Загрузка главной страницы"закоменчено будущее обновление"
     """
     post = get_all_post()
     # if session.get('key'):
@@ -52,5 +56,6 @@ def search_page():
 
 @loader_blueprint.route('/user/<username>')
 def get_user(username):
+    """Вывод старинцы определенного пользователя"""
     post = get_posts_by_user(username)
     return render_template('user-feed.html', post=post)

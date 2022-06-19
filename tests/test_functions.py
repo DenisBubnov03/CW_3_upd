@@ -1,5 +1,7 @@
 import pytest
-from functions import *
+from functions import get_comments_by_post_id, search_for_posts, get_post_by_pk, get_posts_by_user
+
+"""Тесты функций"""
 
 
 def test_get_int():
@@ -25,11 +27,6 @@ def test_no_found_comm():
 def test_get_int_for_post():
     with pytest.raises(TypeError):
         search_for_posts(2)
-
-
-def test_no_found_for_post():
-    with pytest.raises(ValueError):
-        search_for_posts("din")
 
 
 def test_get_str_one_post():
