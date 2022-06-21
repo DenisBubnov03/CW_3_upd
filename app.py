@@ -1,7 +1,10 @@
 from blueprint.loader import *
+from blueprint.logging.auth import *
 app = Flask(__name__)
 app.register_blueprint(main_page)
 app.register_blueprint(loader_blueprint)
+app.register_blueprint(loader_blueprints)
+app.secret_key = 'super secret key'
 
 
 @app.errorhandler(404)

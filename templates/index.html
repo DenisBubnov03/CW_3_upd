@@ -7,9 +7,14 @@
   <title>SKYPROGRAM</title>
   <link href="/static/styles.min.css" rel="stylesheet">
 </head>
-
 <body>
   <header class="container header">
+      {% if not name_user  %}
+        <a href="/auth/" class="button">Войти</a>
+    {% else %}
+        {{ name_user }}
+        <a href="/logout/" class="button">Выйти</a>
+    {% endif %}
     <div class="header__wrapper">
         <a href="/search/" class="header__search-btn">
         <img src="/static/img/index.png" alt="" class="header__search-icon" width="28">
@@ -26,6 +31,15 @@
       </a>
     </div>
   </header>
+  <main class="container">
+  <hr>
+        {% if name_user  %}
+    <a href="/poster/" class="button">Добавить пост</a>
+    {% else %}
+        <p><a href="/auth/">Авторизуйтесь</a> для добавления поста</p>
+    {% endif %}
+    <hr>
+  </main>
   {% for post in posts %}
   <main class="container">
     <section class="items">

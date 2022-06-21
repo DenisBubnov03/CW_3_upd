@@ -1,8 +1,6 @@
-from flask import Flask, request, render_template, send_from_directory, Blueprint, session, jsonify
+from flask import Flask, request, render_template, send_from_directory, Blueprint, session, jsonify, redirect
 import json
 import logging
-
-
 
 
 def get_all_post():
@@ -71,6 +69,15 @@ def search_for_posts(query):
     return content
 
 
+def get_data_json():
+    """
+    Получение данных пользователей
+    """
+    with open('user_data.json', "r", encoding="UTF-8") as file:
+        data = json.load(file)
+        return data
+
+
 def get_post_by_pk(pk):
     """возвращает один пост по его идентификатору."""
     post = get_all_post()
@@ -83,6 +90,29 @@ def get_post_by_pk(pk):
         raise ValueError("Такого поста нет")
 
 
+def write_to_data(login, password, avatar):
+    """
+    Запись данных пользователя
+    """
+    data = get_data_json()
+    user_info = {'login': login, "pass": password, "avatar": avatar}
+    data.append(user_info)
+    with open('user_data.json', "w", encoding="UTF-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
+
+def write_to_json(filename, content):
+    """
+    Добавление поста
+    """
+    data = get_all_post()
+    user_info = {'pic': f'/uploads/images/{filename}', "content": content, "user_name": session["key"][0],
+                 "user_avatar": session["key"][1]}
+    data.append(user_info)
+    with open('data.json', "w", encoding="UTF-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
+
 new_logger = logging.getLogger('loger')
 new_logger.setLevel(logging.INFO)
 file_handler = logging.FileHandler("api.log", encoding='utf-8')
@@ -91,13 +121,3 @@ file_handler.setFormatter(formatter)
 new_logger.addHandler(file_handler)
 
 
-"""Будущее обновление"""
-# def write_to_json(filename, content):
-#     """
-#     Добавление поста
-#     """
-#     data = get_all_post()
-#     user_info = {'pic': f'/uploads/images/{filename}', "content": content}
-#     data.append(user_info)
-#     with open('posts.json', "w", encoding="UTF-8") as file:
-#         json.dump(data, file, indent=4, ensure_ascii=False)

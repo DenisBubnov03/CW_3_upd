@@ -1,6 +1,7 @@
 from functions import *
 loader_blueprint = Blueprint('loader_blueprint', __name__)
 main_page = Blueprint('main_page', __name__)
+ALLOWED_EXTENSIONS = {'jpeg', 'png', 'jpg', 'gif'}
 app = Flask(__name__)
 
 
@@ -26,10 +27,10 @@ def page_index():
     Загрузка главной страницы"закоменчено будущее обновление"
     """
     post = get_all_post()
-    # if session.get('key'):
-    #     return render_template("index.html", name_user=session["key"], posts=post)
-    # else:
-    return render_template("index.html", posts=post)
+    if session.get('key'):
+        return render_template("index.html", name_user=session["key"][0], user_avatar=session["key"][1], posts=post)
+    else:
+        return render_template("index.html", posts=post)
 
 
 @loader_blueprint.route('/post/<int:pk>', methods=["GET"])
@@ -59,3 +60,35 @@ def get_user(username):
     """Вывод старинцы определенного пользователя"""
     post = get_posts_by_user(username)
     return render_template('user-feed.html', post=post)
+
+
+@loader_blueprint.route('/poster/')
+def loader_pages():
+    """
+    Переход на страницу /add_post/
+    """
+    return render_template("post_form.html", name_user=session["key"])
+
+
+@loader_blueprint.route("/poster/", methods=["POST"])
+def page_post_upload():
+    """
+    Отработка страницы добавления поста и обработка ошибок
+    """
+    error = ''
+    picture = request.files.get("picture")
+    filename = picture.filename
+    extension = filename.split(".")[-1]
+    if extension not in ALLOWED_EXTENSIONS:
+        error += "format"
+        new_logger.info("Неверный формат изображения")
+        return render_template("Error_log.html",  )
+    if picture:
+        picture.save(f"./uploads/images/{filename}")
+        content = request.form['content']
+        write_to_json(filename, content)
+        return render_template("post_form.html", content=content, name_user=session["key"][0], picture=filename)
+    else:
+        error += "load"
+        new_logger.info("Картинка не была выбрана")
+        return render_template("Error_log.html", error_load=error)

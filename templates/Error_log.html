@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    {% if error_log %}
+        <a>Ваш логин уже занят, попробуйте другой!</a>
+        <a href="/reg/" class="button">Назад</a>
+    {% endif %}
+    {% if error_pass %}
+        <a>Вы ввели неправильный логин или пароль, попробуйте еще раз!</a>
+        <a href="/auth/" class="button">Назад</a>
+    {% endif %}
+    {% if error_format == "format" %}
+        <a>Файл не правильного формата, должен быть {{ format }}!</a>
+        <a href="/post/" class="button">Назад</a>
+    {% endif %}
+    {% if error_load == 'load' %}
+        <a>Выберете картинку для поста!</a>
+        <a href="/post/" class="button">Назад</a>
+    {% endif %}
+</body>
+</html>
